@@ -23,7 +23,7 @@ class ControlPanel(tk.Frame):
     table_entry_width = 13
     table_start_row = 8
     page_table_titles = []
-    page_table_entries_value = []
+    pageTableEntriesValue = []
     page_table_entries = []
     page_table_info_msg = None
     page_obj_count = 0
@@ -45,12 +45,12 @@ class ControlPanel(tk.Frame):
         self.page_table_titles = self.i_getPageTableTitles()
         self.max_table_col = len(self.page_table_titles)
 
-        self.page_table_entries_value = [
+        self.pageTableEntriesValue = [
             [tk.StringVar() for i in xrange(self.max_table_col)] for j in xrange(self.max_table_row)
         ]
 
         self.page_table_entries = [
-            [ttk.Entry(self, width=self.table_entry_width, textvariable=self.page_table_entries_value[j][i])
+            [ttk.Entry(self, width=self.table_entry_width, textvariable=self.pageTableEntriesValue[j][i])
              for i in xrange(self.max_table_col)] for j in xrange(self.max_table_row)
         ]
         self.page_table_info_msg = tk.StringVar()
@@ -141,7 +141,7 @@ class ControlPanel(tk.Frame):
         """
         清除数据表格中的所有数据
         """
-        for row in self.page_table_entries_value:
+        for row in self.pageTableEntriesValue:
             for col in row:
                 col.set('')
 
@@ -226,7 +226,7 @@ class MaterialPanel(ControlPanel):
 
     def i_fillPageDataTable(self):
         for (row, obj) in enumerate(self.page_objs):
-            rowData = self.page_table_entries_value[row]
+            rowData = self.pageTableEntriesValue[row]
             objFields = obj.get_ui_list()
             for col in xrange(self.max_table_col):
                 rowData[col].set(objFields[col])
@@ -315,7 +315,7 @@ class InMaterialPanel(ControlPanel):
             320, 20, window=self.dataTableFrame, anchor=tk.NW)
 
         self.page_table_entries = [
-            [ttk.Entry(self.dataTableFrame, width=self.table_entry_width, textvariable=self.page_table_entries_value[j][i])
+            [ttk.Entry(self.dataTableFrame, width=self.table_entry_width, textvariable=self.pageTableEntriesValue[j][i])
              for i in xrange(self.max_table_col)] for j in xrange(self.max_table_row)
         ]
 
@@ -379,7 +379,7 @@ class InMaterialPanel(ControlPanel):
     def i_fillPageDataTable(self):
 
         for (row, obj) in enumerate(self.page_objs):
-            rowData = self.page_table_entries_value[row]
+            rowData = self.pageTableEntriesValue[row]
             objFields = obj.get_ui_list()
             user = USER_UTIL.getObjectById(objFields[0])
             material = MATERIAL_UTIL.getObjectById(objFields[1])
@@ -648,7 +648,7 @@ class OutMaterialPanel(ControlPanel):
         current_row = 0
 
         self.page_table_entries = [
-            [ttk.Entry(self.dataTableFrame, width=self.table_entry_width, textvariable=self.page_table_entries_value[j][i])
+            [ttk.Entry(self.dataTableFrame, width=self.table_entry_width, textvariable=self.pageTableEntriesValue[j][i])
              for i in xrange(self.max_table_col)] for j in xrange(self.max_table_row)
         ]
 
@@ -678,7 +678,7 @@ class OutMaterialPanel(ControlPanel):
 
     def i_fillPageDataTable(self):
         for (row, obj) in enumerate(self.page_objs):
-            rowData = self.page_table_entries_value[row]
+            rowData = self.pageTableEntriesValue[row]
             objFields = obj.get_ui_list()
             user = USER_UTIL.getObjectById(objFields[0])
             material = MATERIAL_UTIL.getObjectById(objFields[1])
