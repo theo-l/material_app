@@ -349,7 +349,7 @@ class InMaterialPanel(ControlPanel):
         self.materialInCountVar = tk.IntVar()
         self.materialInUservar = tk.StringVar()
         self.searchKeyVar = tk.StringVar()
-        self.searchKeyVar.set(_.search_key_place_hold)
+        self.searchKeyVar.set('')
         self.searchType = tk.StringVar()
         self.searchType.set(USER_SEARCH)
         # 当前入库记录数据的标识符值
@@ -469,6 +469,7 @@ class InMaterialPanel(ControlPanel):
         searchKey = ttk.Entry(self.mainCanvas, textvariable=self.searchKeyVar)
         self.mainCanvas.create_window(entryX, itemY, window=searchKey)
 
+        itemY += stepY
         searchButton = ttk.Button(
             self.mainCanvas, text=_.search, command=self.__search)
         self.mainCanvas.create_window(50, itemY, window=searchButton)
@@ -477,7 +478,7 @@ class InMaterialPanel(ControlPanel):
             self.mainCanvas, text=_.reset, command=self.__searchReset)
         self.mainCanvas.create_window(150, itemY, window=searchResetButton)
 
-        self.mainCanvas.create_text(30,)
+        # self.mainCanvas.create_text(30,)
 
         # 绘制垂直分割线
         self.mainCanvas.create_line(300, 20, 300, 600)
@@ -529,6 +530,7 @@ class InMaterialPanel(ControlPanel):
 
         materialTypeOption = MATERIAL_UTIL.getTypeNoByName(materialName)
         self.materialTypeVar.set(materialTypeOption[0])
+        self.materialTypeMenu.config(values=materialTypeOption)
 
     def __materialInHandle(self):
         try:
