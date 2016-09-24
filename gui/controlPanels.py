@@ -451,8 +451,10 @@ class InMaterialPanel(ControlPanel):
             labelX, itemY, width=60, text=labelPattern % _.search_type)
 
         # 搜索类型单选按钮
+        # 按用户搜索
         userNameSearch = ttk.Radiobutton(
             self.mainCanvas, text=_.search_by_user, variable=self.searchType, value=USER_SEARCH)
+        # 按材料搜索
         materialNameSearch = ttk.Radiobutton(
             self.mainCanvas, text=_.search_by_material, variable=self.searchType, value=MATERIAL_SEARCH)
 
