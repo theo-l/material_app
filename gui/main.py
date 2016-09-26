@@ -7,8 +7,10 @@ import Tkinter as tk
 import tkMessageBox
 
 from model import USER_UTIL, install_database
-
-from gui.controlPanels import InMaterialPanel, MaterialPanel, OutMaterialPanel
+from gui.constants import WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_TITLE, LOGIN_PANEL_NAME, \
+    LOGOUT_PANEL_NAME, MATERIAL_PANEL_NAME, IN_MATERIAL_PANEL_NAME, OUT_MATERIAL_PANEL_NAME, QUERY_PANEL_NAME
+from gui.panels import MaterialPanel, InMaterialPanel, OutMaterialPanel
+from gui import messages as _
 
 
 class Application(tk.Tk):
@@ -18,12 +20,12 @@ class Application(tk.Tk):
         tk.Tk.__init__(self)
         self.LOGGED_IN = False
         self.USER = None
-        self.WIDTH = 1000
-        self.HEIGHT = 600
+        self.WIDTH = WINDOW_WIDTH
+        self.HEIGHT = WINDOW_HEIGHT
         self.username = tk.StringVar()
         self.password = tk.StringVar()
         self.resizable(False, False)
-        self.title(u'材料管理系统')
+        self.title(WINDOW_TITLE)
         install_database()
         self.initComponents()
 
@@ -36,7 +38,7 @@ class Application(tk.Tk):
         self.createQueryPanel()
         self.createLogoutPanel()
 
-        self.main.add(self.loginPanel, text="登录")
+        self.main.add(self.loginPanel, text=LOGIN_PANEL_NAME)
         self.main.pack(fill=tk.BOTH, expand=tk.YES)
 
     def createMainPanel(self):
@@ -75,12 +77,12 @@ class Application(tk.Tk):
 
         self.loginMsg = tk.Label(self.loginPanel, textvariable=self.loginMsgVar,
                                  foreground="red", font=('times', 12, 'bold'))
-        ttk.Label(self.loginPanel, text=u"用户名").grid(
+        ttk.Label(self.loginPanel, text=_.login_username).grid(
             column=0, row=1)
         tk.Entry(self.loginPanel, textvariable=self.username).grid(
             column=1, row=1)
 
-        ttk.Label(self.loginPanel, text=u"密码").grid(
+        ttk.Label(self.loginPanel, text=_.login_password).grid(
             column=0, row=2)
         tk.Entry(self.loginPanel, textvariable=self.password,
                  show="*").grid(column=1, row=2)
@@ -89,11 +91,11 @@ class Application(tk.Tk):
         self.password.set('test')
 
         ttk.Button(
-            self.loginPanel, text=u"登录", command=self.login).grid(row=3)
+            self.loginPanel, text=_.login, command=self.login).grid(row=3)
 
     def paintLogoutPanel(self):
         "绘制注销控制面板"
-        ttk.Button(self.logoutPanel, text=u"注销", command=self.logout).pack(
+        ttk.Button(self.logoutPanel, text=_.logout, command=self.logout).pack(
             anchor=tk.CENTER)
 
     def login(self):
@@ -107,20 +109,20 @@ class Application(tk.Tk):
         if self.LOGGED_IN:
             self.loginMsgVar.set('')  # 重置登录消息标签
             self.main.forget(self.loginPanel)
-            self.main.add(self.materialPanel, text=u"材料管理")
-            self.main.add(self.inMaterialPanel, text=u"入库")
-            self.main.add(self.outMaterialPanel, text=u"出库")
-            self.main.add(self.queryPanel, text=u"查询")
-            self.main.add(self.logoutPanel, text=u"注销")
+            self.main.add(self.materialPanel, text=MATERIAL_PANEL_NAME)
+            self.main.add(self.inMaterialPanel, text=IN_MATERIAL_PANEL_NAME)
+            self.main.add(self.outMaterialPanel, text=OUT_MATERIAL_PANEL_NAME)
+            self.main.add(self.queryPanel, text=QUERY_PANEL_NAME)
+            self.main.add(self.logoutPanel, text=LOGOUT_PANEL_NAME)
         else:
             self.loginMsg.grid(row=0, columnspan=2)
-            self.loginMsgVar.set(text=u"用户名或密码错误！")
+            self.loginMsgVar.set(text=_.login_error_msg)
 
     def logout(self):
 
-        if tkMessageBox.askyesno("注销？", u"你确定要退出当前登录用户吗？"):
+        if tkMessageBox.askyesno(_.logout_query_title, _.logout_query_msg):
             self.LOGGED_IN = False
-            self.main.add(self.loginPanel, text=u"登录")
+            self.main.add(self.loginPanel, text=LOGIN_PANEL_NAME)
             self.main.forget(self.materialPanel)
             self.main.forget(self.inMaterialPanel)
             self.main.forget(self.outMaterialPanel)
@@ -130,7 +132,6 @@ class Application(tk.Tk):
 
 def main():
     app = Application()
-    app.title(u"材料管理")
     app.mainloop()
 
 if __name__ == '__main__':

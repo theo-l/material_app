@@ -157,9 +157,15 @@ class OutMaterialUtil(ModelUtil):
         "根据用户来获取用户的材料出库列表"
         return self.query(OutMaterial).filter_by(user_id=user.id).all()
 
+    def getOutListCountByUser(self, user):
+        return self.query(OutMaterial).filter_by(user_id=user.id).count()
+
     def getOutListByMaterial(self, material):
         "根据材料来获取材料的出库列表"
         return self.query(OutMaterial).filter_by(material_id=material.id).all()
+
+    def getOutListCountByMaterial(self, material):
+        return self.query(OutMaterial).filter_by(material_id=material.id).count()
 
     def isObjectExists(self, obj):
         return ModelUtil.isObjectExists(self, obj)

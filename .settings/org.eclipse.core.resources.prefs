@@ -1,8 +1,13 @@
 eclipse.preferences.version=1
 encoding//gui/__init__.py=utf-8
-encoding//gui/controlPanels.py=utf-8
+encoding//gui/constants.py=utf-8
 encoding//gui/main.py=utf-8
 encoding//gui/messages.py=utf-8
+encoding//gui/panels/BasePanel.py=utf-8
+encoding//gui/panels/InMaterialPanel.py=utf-8
+encoding//gui/panels/MaterialPanel.py=utf-8
+encoding//gui/panels/OutMaterialPanel.py=utf-8
+encoding//gui/panels/__init__.py=utf-8
 encoding//gui/tutor/apearance_test.py=utf-8
 encoding//gui/tutor/app.py=utf-8
 encoding//gui/tutor/dialog_table.py=utf-8
