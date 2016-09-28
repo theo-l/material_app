@@ -21,6 +21,9 @@ class ControlPanel(tk.Frame):
         tk.Frame.__init__(self, master)
         self.intValidator = self.register(self._intValidator)
 
+        # common control panel widgets
+        self.material_name_widget = None
+
         # control panel's header variables
         self.material_name_var = tk.StringVar()
         self.material_type_var = tk.StringVar()
