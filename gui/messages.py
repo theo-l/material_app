@@ -71,3 +71,5 @@ out_material_confirm_msg = u'确定重复出库相同的材料信息吗?'
 out_material_count_over_msg = u'当前库存 %d 小于 出库量 %d'
 out_material_info_title = u'出库信息'
 out_material_succeed = u'材料出库成功'
+
+update_material_warning_title = u''

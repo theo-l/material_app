@@ -5,7 +5,7 @@
 '''
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Integer, Float, Date, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, Date, Boolean, ForeignKey, event
 from sqlalchemy.orm import relationship
 from datetime import date
 
@@ -64,6 +64,13 @@ class Material(Base):
     @staticmethod
     def new_(name, type_no, count=0):
         return Material(name=name, type_no=type_no, count=count)
+
+
+@event.listens_for(Material, 'before_update')
+def materialPostUpdate(mapper, connect, target):
+    "在更新Material对象之后，将其最后更新时间更新为当前日期"
+    print u'更新材料的更新时间'
+    target.last_update = date.today()
 
 
 class OutMaterial(Base):

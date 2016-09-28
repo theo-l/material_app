@@ -23,41 +23,39 @@ class MaterialPanel(ControlPanel):
 
     def __init__(self, master):
         ControlPanel.__init__(self, master)
-        self.bind('<Enter>', self.enterHandler)
+        self.bind('<Enter>', self.enter_handler)
 
-    def enterHandler(self, event):
-        self._freshPageData()
+        self.paint_panel()
 
-    def i_initMainHeadVars(self):
-        pass
+    def enter_handler(self, event):
+        self._fresh_page_data()
 
-    def i_getPageTableTitles(self):
+    def i_get_page_table_titles(self):
         return _.material_table_titles
 
-    def i_getPageObjCount(self):
+    def i_get_page_obj_count(self):
         return MATERIAL_UTIL.getCount()
 
-    def i_getCurrentPageObjs(self):
+    def i_get_current_page_objs(self):
         start = (self.current_page - 1) * MAX_TABLE_ROW
         end = start + MAX_TABLE_ROW
         return MATERIAL_UTIL.getAllObjects()[start:end]
 
-    def i_fillPageDataTable(self):
+    def i_fill_page_data_table(self):
         for (row, obj) in enumerate(self.page_objs):
-            rowData = self.pageTableEntriesValue[row]
+            rowData = self.page_table_entry_values[row]
             objFields = obj.get_ui_list()
             for col in xrange(self.max_table_col):
                 rowData[col].set(objFields[col])
 
-    def i_paintMainHead(self):
-        mainHeadRow = 1
+    def i_paint_main_head(self):
         ttk.Button(
-            self, text=_.material_file_upload, command=self.__importMaterialFromFile).grid(row=mainHeadRow, column=0)
+            self, text=_.material_file_upload, command=self.__import_material_from_file).grid(row=1, column=0)
 
-#         ttk.Button(self, text=_.refresh, command=self._freshPageData).grid(
+#         ttk.Button(self, text=_.refresh, command=self._fresh_page_data).grid(
 #             row=mainHeadRow, column=2)
 
-    def __importMaterialFromFile(self):
+    def __import_material_from_file(self):
         materialFile = tkFileDialog.askopenfile(mode="r")
 
         if materialFile is None:
@@ -89,7 +87,7 @@ class MaterialPanel(ControlPanel):
         MATERIAL_UTIL.commit()
         tkMessageBox.showinfo(
             _.material_upload_info_title, _.material_upload_info_msg)
-        self.initDynamicData()
+        self.init_dynamic_data()
 
     def __check_title_line(self, fields):
         nameIndex, typeIndex = (None, None)

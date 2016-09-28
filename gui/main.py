@@ -27,52 +27,52 @@ class Application(tk.Tk):
         self.resizable(False, False)
         self.title(WINDOW_TITLE)
         install_database()
-        self.initComponents()
+        self.init_components()
 
-    def initComponents(self):
-        self.createMainPanel()
-        self.createLoginPanel()
-        self.createMaterialPanel()
-        self.createInMaterialPanel()
-        self.createOutMaterialPanel()
-        self.createQueryPanel()
-        self.createLogoutPanel()
+    def init_components(self):
+        self.create_main_panel()
+        self.create_login_panel()
+        self.create_material_panel()
+        self.create_in_material_panel()
+        self.create_out_material_panel()
+        self.create_query_panel()
+        self.create_logout_panel()
 
         self.main.add(self.loginPanel, text=LOGIN_PANEL_NAME)
         self.main.pack(fill=tk.BOTH, expand=tk.YES)
 
-    def createMainPanel(self):
+    def create_main_panel(self):
         "创建主要的控制面板容器"
         self.main = ttk.Notebook(self, width=self.WIDTH, height=self.HEIGHT)
 
-    def createLoginPanel(self):
+    def create_login_panel(self):
         "创建登录控制面板"
         self.loginPanel = ttk.Frame(self.main)
         self.loginMsgVar = tk.StringVar()
-        self.paintLoginPanel()
+        self.paint_login_panel()
 
-    def createMaterialPanel(self):
+    def create_material_panel(self):
         "创建材料管理面板"
         self.materialPanel = MaterialPanel(self)
 
-    def createInMaterialPanel(self):
+    def create_in_material_panel(self):
         "创建入库控制面板"
         self.inMaterialPanel = InMaterialPanel(self.main)
 
-    def createOutMaterialPanel(self):
+    def create_out_material_panel(self):
         "创建出库控制面板"
         self.outMaterialPanel = OutMaterialPanel(self.main)
 
-    def createQueryPanel(self):
+    def create_query_panel(self):
         "创建查询控制面板"
         self.queryPanel = ttk.Frame(self.main)
 
-    def createLogoutPanel(self):
+    def create_logout_panel(self):
         "创建注销控制面板"
         self.logoutPanel = ttk.Frame(self.main)
-        self.paintLogoutPanel()
+        self.paint_logout_panel()
 
-    def paintLoginPanel(self):
+    def paint_login_panel(self):
         '绘制登录控制面板'
 
         self.loginMsg = tk.Label(self.loginPanel, textvariable=self.loginMsgVar,
@@ -93,7 +93,7 @@ class Application(tk.Tk):
         ttk.Button(
             self.loginPanel, text=_.login, command=self.login).grid(row=3)
 
-    def paintLogoutPanel(self):
+    def paint_logout_panel(self):
         "绘制注销控制面板"
         ttk.Button(self.logoutPanel, text=_.logout, command=self.logout).pack(
             anchor=tk.CENTER)

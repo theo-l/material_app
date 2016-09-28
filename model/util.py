@@ -22,7 +22,7 @@ class ModelUtil(object):
     def add(self, obj):
         if not self.isObjectExists(obj):
             self.session.add(obj)
-            self.flush()
+            self.commit()
 
     def addAll(self, *objs):
         self.session.addAll(*objs)

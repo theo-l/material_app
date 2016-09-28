@@ -3,6 +3,10 @@
 GUI 界面中的常量
 '''
 
+# user operate constants
+IN_MATERIAL = 'in'
+OUT_MATERIAL = 'out'
+
 # 搜索类型常量
 USER_SEARCH = 'user'
 MATERIAL_SEARCH = 'material'
@@ -19,7 +23,6 @@ IN_MATERIAL_PANEL_NAME = u'入库'
 OUT_MATERIAL_PANEL_NAME = u'出库'
 QUERY_PANEL_NAME = u'查询'
 LOGOUT_PANEL_NAME = u'注销'
-
 
 # 控制面板实例中的常量
 # 数据表格中的最大行
