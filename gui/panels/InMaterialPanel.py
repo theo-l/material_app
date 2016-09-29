@@ -68,10 +68,7 @@ class InMaterialPanel(ControlPanel):
 
     def i_paint_main_head(self):
 
-        self.main_canvas = tk.Canvas(
-            self, height=600, width=1000)
 
-        self.main_canvas.grid(row=0, column=0, sticky=tk.NSEW)
 
         labelX = 30
         entryX = 150
@@ -79,88 +76,48 @@ class InMaterialPanel(ControlPanel):
         stepY = 30
         label_pattern = '%6s'
 
-        self.main_canvas.create_text(
-            labelX, itemY, width=60, text=label_pattern % _.material_name_label)
-        material_name_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_name_var, width=13)
-        material_name_entry.bind('<FocusOut>', self._reload_material_type)
-        self.main_canvas.create_window(entryX, itemY, window=material_name_entry)
+        self.main_canvas.create_text(labelX, itemY, width=60, text=label_pattern % _.material_name_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_name_widget)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, width=50, text=label_pattern % _.material_type_label)
-        self.material_type_widget = ttk.Combobox(
-            self.main_canvas, textvariable=self.material_type_var)
-        self.material_type_widget.config(width=12)
-        self.main_canvas.create_window(
-            entryX, itemY, window=self.material_type_widget, height=20)
+        self.main_canvas.create_text(labelX, itemY, width=50, text=label_pattern % _.material_type_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_type_widget, height=20)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, width=60, text=label_pattern % _.material_in_count_label)
-        in_count_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_count_var, width=13, validate='key',
-            validatecommand=(self.intValidator, '%d', '%i', '%P'))
-        self.main_canvas.create_window(entryX, itemY, window=in_count_entry)
+        self.main_canvas.create_text(labelX, itemY, width=60, text=label_pattern % _.material_in_count_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_count_widget)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, width=60, text=label_pattern % _.material_in_user_laebl)
-        in_user_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_user_var, width=13)
-        self.main_canvas.create_window(entryX, itemY, window=in_user_entry)
+        self.main_canvas.create_text(labelX, itemY, width=60, text=label_pattern % _.material_in_user_laebl)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_user_widget)
 
         itemY += stepY
 
-        submit_button = ttk.Button(
-            self.main_canvas, text=_.material_in, command=self.__material_in_handle)
+        submit_button = ttk.Button(self.main_canvas, text=_.material_in, command=self.__material_in_handle)
         self.main_canvas.create_window(50, itemY, window=submit_button)
-
-        cancel_button = ttk.Button(
-            self.main_canvas, text=_.cancel, command=self.cancel_operate)
-        self.main_canvas.create_window(entryX, itemY, window=cancel_button)
+        self.main_canvas.create_window(entryX, itemY, window=self.cancel_submit_button)
 
         # 绘制水平分割线
         self.main_canvas.create_line(0, 200, 300, 200)
 
         itemY = 230
         # 搜索类型标签
-        self.main_canvas.create_text(
-            labelX, itemY, width=60, text=label_pattern % _.search_type)
+        self.main_canvas.create_text(labelX, itemY, width=60, text=label_pattern % _.search_type)
 
         # 搜索类型单选按钮
-        # 按用户搜索
-        user_name_search_widget = ttk.Radiobutton(
-            self.main_canvas, text=_.search_by_user, command=self.__search_type_handler,
-            variable=self.search_type_var,
-            value=USER_SEARCH)
-        # 按材料搜索: 会触发材料类型下拉框的显示
-        material_name_search_widget = ttk.Radiobutton(
-            self.main_canvas, text=_.search_by_material, variable=self.search_type_var,
-            command=self.__search_type_handler,
-            value=MATERIAL_SEARCH)
-
-        self.main_canvas.create_window(entryX, itemY, window=user_name_search_widget)
-        self.main_canvas.create_window(
-            entryX + 60, itemY, window=material_name_search_widget)
+        self.main_canvas.create_window(entryX, itemY, window=self.user_search_type_widget)
+        self.main_canvas.create_window(entryX + 60, itemY, window=self.material_search_type_widget)
 
         itemY += stepY
-        self.main_canvas.create_text(
-            labelX, itemY, text=label_pattern % _.search_key_label)
+        self.main_canvas.create_text(labelX, itemY, text=label_pattern % _.search_key_label)
 
         # 主搜索关键字
-        search_key_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.search_key_var, width=18)
-        search_key_entry.bind('<FocusOut>', self.__search_key_handler)
-        self.main_canvas.create_window(entryX, itemY, window=search_key_entry)
+        self.main_canvas.create_window(entryX, itemY, window=self.search_key_widget)
 
         # 搜索材料类型，入库搜索类型为材料的话则显示，否则不显示该组件
-        self.search_material_type_widget = ttk.Combobox(
-            self.main_canvas, textvariable=self.search_material_type_var)
-        self.search_material_type_widget.config(width=16)
 
         itemY += stepY
         self.search_material_type_labelX = labelX
@@ -169,51 +126,14 @@ class InMaterialPanel(ControlPanel):
         self.search_material_type_entryY = itemY
 
         itemY += stepY
-        search_button = ttk.Button(
-            self.main_canvas, text=_.search, command=self.__search)
-        self.main_canvas.create_window(50, itemY, window=search_button)
-
-        search_reset_button = ttk.Button(
-            self.main_canvas, text=_.reset, command=self._search_reset)
-        self.main_canvas.create_window(150, itemY, window=search_reset_button)
+        self.main_canvas.create_window(50, itemY, window=self.search_button)
+        self.main_canvas.create_window(150, itemY, window=self.reset_button)
 
         # 绘制垂直分割线
         self.main_canvas.create_line(300, 20, 300, 600)
 
-    def __search_key_handler(self, event):
-        '''
-        根据用户选择的搜索类型来选择相关的事件处理
-        1. 如果按用户搜索则不做任何处理
-        2. 如果按材料搜索则重置材料型号下拉框选择值
-        '''
 
-        if not self.search_key:
-            return
-
-        if self._is_user_search():
-            return
-
-        material_type_options = MATERIAL_UTIL.getTypeNoByName(self.search_key)
-        self.search_material_type_var.set(material_type_options[0])
-        self.search_material_type_widget.config(values=material_type_options)
-
-    def __search_type_handler(self):
-        '''
-           根据用户选择的搜索类型来控制页面搜索组件的显示效果
-           1. 如果按用户搜索则在画布上去掉材料类型下拉框
-           2. 如果按材料搜索则在画布上显示材料类型下拉框
-        '''
-        if self._is_user_search():
-            self.main_canvas.delete(self.materialTypeSearchLabel)
-            self.main_canvas.delete(self.searchMaterialTypeEntry)
-        else:
-            self.materialTypeSearchLabel = self.main_canvas.create_text(
-                self.search_material_type_labelX, self.search_material_type_labelY, text=_.material_type_label)
-            self.searchMaterialTypeEntry = self.main_canvas.create_window(
-                self.search_material_type_entryX, self.search_material_type_entryY,
-                window=self.search_material_type_widget, height=20)
-
-    def __search(self):
+    def i_search(self):
 
         if not self.search_key:
             tkMessageBox.showinfo(

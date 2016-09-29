@@ -77,64 +77,36 @@ class OutMaterialPanel(ControlPanel):
         entryX = 150
         itemY = 35
         stepY = 35
-        self.main_canvas = tk.Canvas(
-            self, width=1000, height=600)
-        self.main_canvas.grid(row=0, column=0, sticky=tk.NSEW)
 
-        self.data_table_frame = tk.Frame(
-            self.main_canvas, width=680, height=580)
-        self.main_canvas.create_window(
-            320, 20, window=self.data_table_frame, anchor=tk.NW)
 
-        self.main_canvas.create_text(
-            labelX, itemY, text='%8s' % _.material_name_label)
-        material_name_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_name_var, width=13)
-        material_name_entry.bind('<FocusOut>', self._reload_material_type)
-        self.main_canvas.create_window(entryX, itemY, window=material_name_entry)
+        self.main_canvas.create_text(labelX, itemY, text='%8s' % _.material_name_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_name_widget)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, text='%8s' % _.material_type_label)
-        self.material_type_widget = ttk.Combobox(
-            self.main_canvas, textvariable=self.material_type_var)
-        self.material_type_widget.config(width=12)
-        self.main_canvas.create_window(
-            entryX, itemY, window=self.material_type_widget, height=20)
+        self.main_canvas.create_text(labelX, itemY, text='%8s' % _.material_type_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_type_widget, height=20)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, text='%8s' % _.material_out_count_label)
-        out_count_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_count_var, width=13)
-        self.main_canvas.create_window(entryX, itemY, window=out_count_entry)
+        self.main_canvas.create_text(labelX, itemY, text='%8s' % _.material_out_count_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_count_widget)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, text='%8s' % _.material_out_usage_label)
-        out_usage_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_usage_var, width=13)
-        self.main_canvas.create_window(entryX, itemY, window=out_usage_entry)
+        self.main_canvas.create_text(labelX, itemY, text='%8s' % _.material_out_usage_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_usage_widget)
 
         itemY += stepY
 
-        self.main_canvas.create_text(
-            labelX, itemY, text='%8s' % _.material_out_user_label)
-        out_user_entry = ttk.Entry(
-            self.main_canvas, textvariable=self.material_user_var, width=13)
-        self.main_canvas.create_window(entryX, itemY, window=out_user_entry)
+        self.main_canvas.create_text(labelX, itemY, text='%8s' % _.material_out_user_label)
+        self.main_canvas.create_window(entryX, itemY, window=self.material_user_widget)
 
         itemY += stepY
 
-        submit_button = ttk.Button(
-            self.main_canvas, text=_.material_out, command=self.__material_out_handler)
+        submit_button = ttk.Button(self.main_canvas, text=_.material_out, command=self.__material_out_handler)
         self.main_canvas.create_window(50, itemY, window=submit_button)
-        cancel_button = ttk.Button(
-            self.main_canvas, text=_.cancel, command=self.cancel_operate)
-        self.main_canvas.create_window(150, itemY, window=cancel_button)
+        self.main_canvas.create_window(150, itemY, window=self.cancel_submit_button)
 
         itemY += stepY
 
@@ -148,27 +120,16 @@ class OutMaterialPanel(ControlPanel):
 
         # 绘制搜索类型的单选按钮
         username_search_widget = ttk.Radiobutton(
-            self.main_canvas, text=_.search_by_user, variable=self.search_type_var, value=USER_SEARCH,
-            command=self.__search_type_handler)
-        self.main_canvas.create_window(entryX, itemY, window=username_search_widget)
-
-        material_search_widget = ttk.Radiobutton(
-            self.main_canvas, text=_.search_by_material, variable=self.search_type_var, value=MATERIAL_SEARCH,
-            command=self.__search_type_handler)
-        self.main_canvas.create_window(
-            entryX + 60, itemY, window=material_search_widget)
+        self.main_canvas.create_window(entryX, itemY, window=self.user_search_type_widget)
+        self.main_canvas.create_window(entryX + 60, itemY, window=self.material_search_type_widget)
 
         itemY += stepY
 
         # 绘制搜索关键字
         self.main_canvas.create_text(labelX, itemY, text=_.search_key_label)
-        search_key_widget = ttk.Entry(self.main_canvas, textvariable=self.search_key_var)
-        search_key_widget.bind('<FocusOut>', self.__search_key_focus_out_handler)
-        self.main_canvas.create_window(entryX, itemY, window=search_key_widget)
+        self.main_canvas.create_window(entryX, itemY, window=self.search_key_widget)
 
         itemY += stepY
-        self.search_material_type_widget = ttk.Combobox(
-            self.main_canvas, textvariable=self.search_material_type_var, width=16)
 
         self.search_material_type_labelX = labelX
         self.search_material_type_labelY = itemY
@@ -176,18 +137,13 @@ class OutMaterialPanel(ControlPanel):
         self.search_material_type_entryY = itemY
 
         itemY += stepY
-        search_button = ttk.Button(
-            self.main_canvas, command=self.__search, text=_.search)
-        self.main_canvas.create_window(50, itemY, window=search_button)
-
-        reset_button = ttk.Button(
-            self.main_canvas, command=self._search_reset, text=_.reset)
-        self.main_canvas.create_window(150, itemY, window=reset_button)
+        self.main_canvas.create_window(50, itemY, window=self.search_button)
+        self.main_canvas.create_window(150, itemY, window=self.reset_button)
 
         # 绘制一个垂直分割线
         self.main_canvas.create_line(300, 20, 300, 600)
 
-    def __search(self):
+    def i_search(self):
         if not self.search_key:
             tkMessageBox.showwarning(
                 _.search_warning_title, _.search_key_none_warning_msg)

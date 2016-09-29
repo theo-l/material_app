@@ -19,10 +19,8 @@ class ControlPanel(tk.Frame):
 
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        self.intValidator = self.register(self._intValidator)
+        self.int_validator = self.register(self._intValidator)
 
-        # common control panel widgets
-        self.material_name_widget = None
 
         # control panel's header variables
         self.material_name_var = tk.StringVar()
@@ -36,6 +34,37 @@ class ControlPanel(tk.Frame):
         self.search_type_var.set(USER_SEARCH)  # default search by user
         self.search_key_var = tk.StringVar()
         self.search_material_type_var = tk.StringVar()
+
+        # common control panel widgets
+        self.main_canvas = tk.Canvas(self, height=600, width=1000)
+        self.main_canvas.grid(row=0, column=0, sticky=tk.NSEW)
+        self.data_table_frame=tk.Frame(self.main_canvas, width=680, height=580)
+        self.main_canvas.create_window(320,20,window=self.data_table_frame, anchor=tk.NW)
+
+        self.material_name_widget = ttk.Entry(self.main_canvas, textvariable=self.material_name_var, width=13)
+        self.material_name_widget.bind('<FocusOut>', self._material_name_handler)
+
+        self.material_type_widget = ttk.Combobox(self.main_canvas, textvariable=self.material_type_var, width=12)
+
+        self.material_count_widget = ttk.Entry(self.main_canvas, textvariable=self.material_count_var, width=13, validate='key', validatecommand=(self.intValidator, '%d', '%i', '%P'))
+
+        self.material_usage_widget = ttk.Entry(self.main_canvas, textvariable = self.material_usage_var, width=13)
+        self.material_user_widget = ttk.Entry(self.main_canvas, textvariable = self.material_user_var, width=13)
+
+        self.cancel_submit_button =ttk.Button(self.main_canvas, command=self.cancel_operate, text=_.cancel)
+
+        self.user_search_type_widget = ttk.Radiobutton(self.main_canvas, text=_.search_by_user, value=USER_SEARCH, command=self._search_type_handler, variable=self.search_type_var)
+        self.material_search_type_widget = ttk.Radiobutton(self.main_canvas, text=_.search_by_material, value=MATERIAL_SEARCH, command=self._search_type_handler, variable=self.search_type_var)
+
+        self.search_key_widget = ttk.Entry(self.main_canvas, textvariable = self.search_key_var)
+        self.search_key_widget.bind('<FocusOut>', self._search_key_handler)
+
+        self.search_material_type_widget = ttk.Combobox(self.main_canvas, textvariable=self.search_material_type_var, width=16)
+        self.search_material_type_widget.config(width=12)
+
+        self.search_button = ttk.Button(self.main_canvas, text=_.search, command=self.i_search)
+        self.reset_button = ttk.Button(self.main_canvas, text=_.reset, command=self._search_reset)
+
 
         # material type search widget's label and combobox position
         self.search_material_type_labelX = None
@@ -69,6 +98,51 @@ class ControlPanel(tk.Frame):
 
         # paint the control panel
         self.paint_panel()
+
+
+    def _material_name_handler(self, event):
+        '''
+        On the control panel header exist a common association between material_name and material_type
+        this event handler method will load the material_type depends on the material_name
+        '''
+        if not self.material_name:
+            return
+
+        material_type_options = MATERIAL_UTIL.getTypeNoByName(self.material_name)
+        self.material_type_var.set(material_type_options[0])
+        self.material_type_widget.config(values = material_type_options )
+
+
+    def _search_type_handler(self):
+        '''
+        control search control's display depends on user selected search type
+        '''
+        if self._is_material_search():
+            self.search_material_type_label_id=self.main_canvas.create_text(self.search_material_type_labelX, self.search_material_type_labelY, text=_.material_type_label)
+            self.search_material_type_widget_id = self.main_canvas.create_window(self.search_material_type_entryX, self.search_material_type_entryY, window=self.search_material_type_widget)
+        else:
+            self.main_canvas.delete(self.search_material_type_label_id)
+            self.main_canvas.delete(self.search_material_type_widget_id)
+
+
+    def _search_key_handler(self, event):
+        '''
+        control search_material_type_widget's value initiation depends on user selected search type
+        '''
+        if not self.search_key:
+            return
+
+        if self._is_user_search():
+            return 
+
+        material_type_options = MATERIAL_UTIL.getTypeNoByName(self.search_key)
+        self.search_material_type_var.set(material_type_options[0])
+        self.material_type_widget.config(values=material_type_options)
+
+    def i_search(self):
+        'Because the search action has different behaviour in differnt control panel'
+        raise NotImplemented('search action should be implemented by the concrete class')
+        
 
     @property
     def material_name(self):
@@ -272,17 +346,6 @@ class ControlPanel(tk.Frame):
         return "".join(
             (self.material_name, self.material_type, str(self.material_count), self.material_usage, self.material_user))
 
-    def _reload_material_type(self, event):
-        '''
-        On the control panel header exist a common association between material_name and material_type
-        this event handler method will load the material_type depends on the material_name
-        '''
-        if not self.material_name:
-            return
-
-        material_type_options = MATERIAL_UTIL.getTypeNoByName(self.material_name)
-        self.material_type_var.set(material_type_options[0])
-        self.material_type_widget.config(values = material_type_options )
 
     def _search_reset(self):
         '''
@@ -321,7 +384,7 @@ class ControlPanel(tk.Frame):
 
 
     # 整数Entry值验证器
-    def _intValidator(self, action, index, text):
+    def _int_validator(self, action, index, text):
         print(action, index, text)
         if not text:
             return True
