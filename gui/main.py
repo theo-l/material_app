@@ -11,6 +11,7 @@ from gui.constants import WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_TITLE, LOGIN_PANEL
     LOGOUT_PANEL_NAME, MATERIAL_PANEL_NAME, IN_MATERIAL_PANEL_NAME, OUT_MATERIAL_PANEL_NAME, QUERY_PANEL_NAME
 from gui.panels import MaterialPanel, InMaterialPanel, OutMaterialPanel
 from gui import messages as _
+from gui.config import DEBUG
 
 
 class Application(tk.Tk):
@@ -38,7 +39,7 @@ class Application(tk.Tk):
         self.create_query_panel()
         self.create_logout_panel()
 
-        self.main.add(self.loginPanel, text=LOGIN_PANEL_NAME)
+        self.main.add(self.login_panel, text=LOGIN_PANEL_NAME)
         self.main.pack(fill=tk.BOTH, expand=tk.YES)
 
     def create_main_panel(self):
@@ -47,55 +48,56 @@ class Application(tk.Tk):
 
     def create_login_panel(self):
         "创建登录控制面板"
-        self.loginPanel = ttk.Frame(self.main)
-        self.loginMsgVar = tk.StringVar()
+        self.login_panel = ttk.Frame(self.main)
+        self.login_msg_var = tk.StringVar()
         self.paint_login_panel()
 
     def create_material_panel(self):
         "创建材料管理面板"
-        self.materialPanel = MaterialPanel(self)
+        self.material_panel = MaterialPanel(self)
 
     def create_in_material_panel(self):
         "创建入库控制面板"
-        self.inMaterialPanel = InMaterialPanel(self.main)
+        self.in_material_panel = InMaterialPanel(self.main)
 
     def create_out_material_panel(self):
         "创建出库控制面板"
-        self.outMaterialPanel = OutMaterialPanel(self.main)
+        self.out_material_panel = OutMaterialPanel(self.main)
 
     def create_query_panel(self):
         "创建查询控制面板"
-        self.queryPanel = ttk.Frame(self.main)
+        self.query_panel = ttk.Frame(self.main)
 
     def create_logout_panel(self):
         "创建注销控制面板"
-        self.logoutPanel = ttk.Frame(self.main)
+        self.logout_panel = ttk.Frame(self.main)
         self.paint_logout_panel()
 
     def paint_login_panel(self):
         '绘制登录控制面板'
 
-        self.loginMsg = tk.Label(self.loginPanel, textvariable=self.loginMsgVar,
-                                 foreground="red", font=('times', 12, 'bold'))
-        ttk.Label(self.loginPanel, text=_.login_username).grid(
+        self.login_msg = tk.Label(self.login_panel, textvariable=self.login_msg_var,
+                                  foreground="red", font=('times', 12, 'bold'))
+        ttk.Label(self.login_panel, text=_.login_username).grid(
             column=0, row=1)
-        tk.Entry(self.loginPanel, textvariable=self.username).grid(
+        tk.Entry(self.login_panel, textvariable=self.username).grid(
             column=1, row=1)
 
-        ttk.Label(self.loginPanel, text=_.login_password).grid(
+        ttk.Label(self.login_panel, text=_.login_password).grid(
             column=0, row=2)
-        tk.Entry(self.loginPanel, textvariable=self.password,
+        tk.Entry(self.login_panel, textvariable=self.password,
                  show="*").grid(column=1, row=2)
 
-        self.username.set('test')
-        self.password.set('test')
+        if DEBUG:
+            self.username.set('test')
+            self.password.set('test')
 
         ttk.Button(
-            self.loginPanel, text=_.login, command=self.login).grid(row=3)
+            self.login_panel, text=_.login, command=self.login).grid(row=3)
 
     def paint_logout_panel(self):
         "绘制注销控制面板"
-        ttk.Button(self.logoutPanel, text=_.logout, command=self.logout).pack(
+        ttk.Button(self.logout_panel, text=_.logout, command=self.logout).pack(
             anchor=tk.CENTER)
 
     def login(self):
@@ -107,27 +109,27 @@ class Application(tk.Tk):
         self.LOGGED_IN = self.USER is not None
 
         if self.LOGGED_IN:
-            self.loginMsgVar.set('')  # 重置登录消息标签
-            self.main.forget(self.loginPanel)
-            self.main.add(self.materialPanel, text=MATERIAL_PANEL_NAME)
-            self.main.add(self.inMaterialPanel, text=IN_MATERIAL_PANEL_NAME)
-            self.main.add(self.outMaterialPanel, text=OUT_MATERIAL_PANEL_NAME)
-            self.main.add(self.queryPanel, text=QUERY_PANEL_NAME)
-            self.main.add(self.logoutPanel, text=LOGOUT_PANEL_NAME)
+            self.login_msg_var.set('')  # 重置登录消息标签
+            self.main.forget(self.login_panel)
+            self.main.add(self.material_panel, text=MATERIAL_PANEL_NAME)
+            self.main.add(self.in_material_panel, text=IN_MATERIAL_PANEL_NAME)
+            self.main.add(self.out_material_panel, text=OUT_MATERIAL_PANEL_NAME)
+            self.main.add(self.query_panel, text=QUERY_PANEL_NAME)
+            self.main.add(self.logout_panel, text=LOGOUT_PANEL_NAME)
         else:
-            self.loginMsg.grid(row=0, columnspan=2)
-            self.loginMsgVar.set(text=_.login_error_msg)
+            self.login_msg.grid(row=0, columnspan=2)
+            self.login_msg_var.set(_.login_error_msg)
 
     def logout(self):
 
         if tkMessageBox.askyesno(_.logout_query_title, _.logout_query_msg):
             self.LOGGED_IN = False
-            self.main.add(self.loginPanel, text=LOGIN_PANEL_NAME)
-            self.main.forget(self.materialPanel)
-            self.main.forget(self.inMaterialPanel)
-            self.main.forget(self.outMaterialPanel)
-            self.main.forget(self.queryPanel)
-            self.main.forget(self.logoutPanel)
+            self.main.add(self.login_panel, text=LOGIN_PANEL_NAME)
+            self.main.forget(self.material_panel)
+            self.main.forget(self.in_material_panel)
+            self.main.forget(self.out_material_panel)
+            self.main.forget(self.query_panel)
+            self.main.forget(self.logout_panel)
 
 
 def main():

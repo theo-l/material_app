@@ -3,6 +3,12 @@
 GUI 界面中的常量
 '''
 
+PRE_PAGE = "pre"
+NEXT_PAGE = "next"
+PRE_LOGO = '<'
+NEXT_LOGO = '>'
+ENCODING = 'utf-8'
+
 # user operate constants
 IN_MATERIAL = 'in'
 OUT_MATERIAL = 'out'
@@ -13,7 +19,7 @@ MATERIAL_SEARCH = 'material'
 
 # 主窗口相关属性常量
 WINDOW_TITLE = u'材料管理'
-WINDOW_WIDTH = 1000
+WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 600
 
 # 控制面板的名称常量

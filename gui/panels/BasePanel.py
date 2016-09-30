@@ -8,10 +8,9 @@ import Tkinter as tk
 from gui import util
 from gui.constants import USER_SEARCH, MATERIAL_SEARCH
 from gui.constants import MAX_TABLE_ROW, PAGE_INFO_SEPARATOR, IN_MATERIAL, OUT_MATERIAL
-import  gui.messages as _
+import gui.messages as _
 
-from model import MATERIAL_UTIL, USER_UTIL, User, Material
-
+from model import MATERIAL_UTIL, USER_UTIL, User
 
 
 class ControlPanel(tk.Frame):
@@ -19,52 +18,67 @@ class ControlPanel(tk.Frame):
 
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        self.int_validator = self.register(self._intValidator)
+        self.int_validator = self.register(util.int_validator)
 
-
-        # control panel's header variables
+        # control panel's common header variables
         self.material_name_var = tk.StringVar()
         self.material_type_var = tk.StringVar()
+        self.material_new_type_var = tk.StringVar()
+        self.material_unit_var = tk.StringVar()
         self.material_count_var = tk.IntVar()
+        self.material_price_var = tk.DoubleVar()
+        self.material_note_var = tk.StringVar()
         self.material_usage_var = tk.StringVar()
         self.material_user_var = tk.StringVar()
 
-        # control panel's search variables
+        # control panel's common search variables
         self.search_type_var = tk.StringVar()
         self.search_type_var.set(USER_SEARCH)  # default search by user
         self.search_key_var = tk.StringVar()
         self.search_material_type_var = tk.StringVar()
 
-        # common control panel widgets
-        self.main_canvas = tk.Canvas(self, height=600, width=1000)
+        # control panel main canvas for layout
+        self.main_canvas = tk.Canvas(self, height=600, width=1200, bg='light green')
         self.main_canvas.grid(row=0, column=0, sticky=tk.NSEW)
-        self.data_table_frame=tk.Frame(self.main_canvas, width=680, height=580)
-        self.main_canvas.create_window(320,20,window=self.data_table_frame, anchor=tk.NW)
 
+        # control panel's data table frame widget
+        self.data_table_frame = tk.Frame(self.main_canvas, width=780, height=580, bg='light blue')
+        self.main_canvas.create_window(320, 20, window=self.data_table_frame, anchor=tk.NW)
+
+        # control panel's common header widgets
         self.material_name_widget = ttk.Entry(self.main_canvas, textvariable=self.material_name_var, width=13)
         self.material_name_widget.bind('<FocusOut>', self._material_name_handler)
 
         self.material_type_widget = ttk.Combobox(self.main_canvas, textvariable=self.material_type_var, width=12)
+        self.material_new_type_widget = ttk.Entry(self.main_canvas, textvariable=self.material_new_type_var, width=13)
 
-        self.material_count_widget = ttk.Entry(self.main_canvas, textvariable=self.material_count_var, width=13, validate='key', validatecommand=(self.intValidator, '%d', '%i', '%P'))
+        self.material_unit_widget = ttk.Entry(self.main_canvas, textvariable=self.material_unit_var, width=13)
 
-        self.material_usage_widget = ttk.Entry(self.main_canvas, textvariable = self.material_usage_var, width=13)
-        self.material_user_widget = ttk.Entry(self.main_canvas, textvariable = self.material_user_var, width=13)
+        self.material_count_widget = ttk.Entry(self.main_canvas, textvariable=self.material_count_var, width=13,
+                                               validate='key', validatecommand=(self.int_validator, '%d', '%i', '%P'))
+        self.material_price_widget = ttk.Entry(self.main_canvas, textvariable=self.material_price_var, width=13)
+        self.material_note_widget = ttk.Entry(self.main_canvas, textvariable=self.material_note_var, width=13)
 
-        self.cancel_submit_button =ttk.Button(self.main_canvas, command=self.cancel_operate, text=_.cancel)
+        self.material_usage_widget = ttk.Entry(self.main_canvas, textvariable=self.material_usage_var, width=13)
+        self.material_user_widget = ttk.Entry(self.main_canvas, textvariable=self.material_user_var, width=13)
 
-        self.user_search_type_widget = ttk.Radiobutton(self.main_canvas, text=_.search_by_user, value=USER_SEARCH, command=self._search_type_handler, variable=self.search_type_var)
-        self.material_search_type_widget = ttk.Radiobutton(self.main_canvas, text=_.search_by_material, value=MATERIAL_SEARCH, command=self._search_type_handler, variable=self.search_type_var)
+        self.cancel_submit_button = ttk.Button(self.main_canvas, command=self._cancel_operate, text=_.cancel)
 
-        self.search_key_widget = ttk.Entry(self.main_canvas, textvariable = self.search_key_var)
+        self.user_search_type_widget = ttk.Radiobutton(self.main_canvas, text=_.search_by_user, value=USER_SEARCH,
+                                                       command=self._search_type_handler, variable=self.search_type_var)
+        self.material_search_type_widget = ttk.Radiobutton(self.main_canvas, text=_.search_by_material,
+                                                           value=MATERIAL_SEARCH, command=self._search_type_handler,
+                                                           variable=self.search_type_var)
+
+        # control panel's common search widget
+        self.search_key_widget = ttk.Entry(self.main_canvas, textvariable=self.search_key_var)
         self.search_key_widget.bind('<FocusOut>', self._search_key_handler)
 
-        self.search_material_type_widget = ttk.Combobox(self.main_canvas, textvariable=self.search_material_type_var, width=16)
+        self.search_material_type_widget = ttk.Combobox(self.main_canvas, textvariable=self.search_material_type_var)
         self.search_material_type_widget.config(width=12)
 
-        self.search_button = ttk.Button(self.main_canvas, text=_.search, command=self.i_search)
+        self.search_button = ttk.Button(self.main_canvas, text=_.search, command=self._search)
         self.reset_button = ttk.Button(self.main_canvas, text=_.reset, command=self._search_reset)
-
 
         # material type search widget's label and combobox position
         self.search_material_type_labelX = None
@@ -72,8 +86,14 @@ class ControlPanel(tk.Frame):
         self.search_material_type_entryX = None
         self.search_material_type_entryY = None
 
-        # control panel's type
-        self.control_panel_type=None
+        # variables used to control the control panel's main header layout
+        self.HEADER_LABEL_X = 30
+        self.HEADER_WIDGET_X = 150
+        self.header_widget_current_y = 35
+        self.HEADER_WIDGET_STEP_Y = 30
+
+        # control panel's type, used to control update material's count behavior
+        self.control_panel_type = None
 
         # some static variable definition
         self.page_table_titles = self.i_get_page_table_titles()
@@ -82,7 +102,8 @@ class ControlPanel(tk.Frame):
             [tk.StringVar() for i in xrange(self.max_table_col)] for j in xrange(MAX_TABLE_ROW)
             ]
         self.page_table_entries = [
-            [ttk.Entry(self, width=self.TABLE_ENTRY_WIDTH, textvariable=self.page_table_entry_values[j][i])
+            [ttk.Entry(self.data_table_frame, width=self.TABLE_ENTRY_WIDTH,
+                       textvariable=self.page_table_entry_values[j][i])
              for i in xrange(self.max_table_col)] for j in xrange(MAX_TABLE_ROW)
             ]
 
@@ -99,6 +120,53 @@ class ControlPanel(tk.Frame):
         # paint the control panel
         self.paint_panel()
 
+    def paint_panel(self):
+        """
+        绘制控制面板UI
+        """
+        # util.add_horizontal_space(self, 11, 0)
+        self.i_paint_main_head()
+        # util.add_horizontal_separator(self, 11, 2)
+        self.paint_data_table()
+
+    def paint_data_table(self):
+        """
+        绘制控制面板中的数据表格
+        """
+        # self.page_table_entries = [
+        #     [ttk.Entry(self.data_table_frame, width=self.TABLE_ENTRY_WIDTH,
+        #                textvariable=self.page_table_entry_values[j][i]) for i in xrange(self.max_table_col)]
+        #     for j in xrange(MAX_TABLE_ROW)
+        #     ]
+
+        current_row = 0
+        # 绘制表头
+        for (col, name) in enumerate(self.page_table_titles):
+            ttk.Label(self.data_table_frame, text=name, width=self.TABLE_ENTRY_WIDTH).grid(
+                row=current_row, column=col)
+
+        current_row += 1
+
+        # 绘制数据表格
+        for row in xrange(MAX_TABLE_ROW):
+            for col in xrange(self.max_table_col):
+                self.page_table_entries[row][col].grid(
+                    row=current_row, column=col)
+            current_row += 1
+
+        util.add_horizontal_separator(self.data_table_frame, self.max_table_col, current_row)
+        self._paint_table_pagination(current_row + 3)
+
+    def _paint_table_pagination(self, row):
+
+        """
+        绘制数据表格的导航按钮
+        """
+        util.make_pre_button(self.data_table_frame, row, 0, self._pre_page)
+        ttk.Label(self.data_table_frame, textvariable=self.page_table_info_msg).grid(
+            row=row, column=1)
+        self._set_page_table_info_msg()
+        util.make_next_button(self.data_table_frame, row, 2, self._next_page)
 
     def _material_name_handler(self, event):
         '''
@@ -110,79 +178,75 @@ class ControlPanel(tk.Frame):
 
         material_type_options = MATERIAL_UTIL.getTypeNoByName(self.material_name)
         self.material_type_var.set(material_type_options[0])
-        self.material_type_widget.config(values = material_type_options )
-
+        self.material_type_widget.config(values=material_type_options)
 
     def _search_type_handler(self):
         '''
         control search control's display depends on user selected search type
         '''
         if self._is_material_search():
-            self.search_material_type_label_id=self.main_canvas.create_text(self.search_material_type_labelX, self.search_material_type_labelY, text=_.material_type_label)
-            self.search_material_type_widget_id = self.main_canvas.create_window(self.search_material_type_entryX, self.search_material_type_entryY, window=self.search_material_type_widget)
+            self.search_material_type_label_id = self.main_canvas.create_text(self.search_material_type_labelX,
+                                                                              self.search_material_type_labelY,
+                                                                              text=_.material_type_label)
+            self.search_material_type_widget_id = self.main_canvas.create_window(self.search_material_type_entryX,
+                                                                                 self.search_material_type_entryY,
+                                                                                 window=self.search_material_type_widget)
         else:
             self.main_canvas.delete(self.search_material_type_label_id)
             self.main_canvas.delete(self.search_material_type_widget_id)
-
 
     def _search_key_handler(self, event):
         '''
         control search_material_type_widget's value initiation depends on user selected search type
         '''
         if not self.search_key:
+            print 'key word is null'
             return
 
         if self._is_user_search():
-            return 
+            print 'is user search'
+            return
 
         material_type_options = MATERIAL_UTIL.getTypeNoByName(self.search_key)
         self.search_material_type_var.set(material_type_options[0])
-        self.material_type_widget.config(values=material_type_options)
+        self.search_material_type_widget.config(values=material_type_options)
 
-    def i_search(self):
-        'Because the search action has different behaviour in differnt control panel'
-        raise NotImplemented('search action should be implemented by the concrete class')
-        
-
+    # properties methods
     @property
     def material_name(self):
         return self.material_name_var.get()
-
-    @material_name.setter
-    def material_name(self, value):
-        self.material_name_var.set(value)
 
     @property
     def material_type(self):
         return self.material_type_var.get()
 
-    @material_type.setter
-    def material_type(self, value):
-        self.material_type_var.set(value)
+    @property
+    def material_new_type(self):
+        return self.material_new_type_var.get()
+
+    @property
+    def material_unit(self):
+        return self.material_unit_var.get()
+
+    @property
+    def material_price(self):
+        return self.material_price_var.get()
+
+    @property
+    def material_note(self):
+        return self.material_note_var.get()
 
     @property
     def material_count(self):
         return self.material_count_var.get()
 
-    @material_count.setter
-    def material_count(self, value):
-        self.material_count_var.set(value)
-
     @property
     def material_usage(self):
         return self.material_usage_var.get()
 
-    @material_usage.setter
-    def material_usage(self, value):
-        self.material_usage_var.set(value)
-
     @property
     def material_user(self):
         return self.material_user_var.get()
-
-    @material_user.setter
-    def material_user(self, value):
-        self.material_user_var.set(value)
 
     @property
     def search_type(self):
@@ -196,67 +260,65 @@ class ControlPanel(tk.Frame):
     def search_material_type(self):
         return self.search_material_type_var.get()
 
-    def cancel_operate(self):
-        self.material_name = ''
-        self.material_type = ''
-        self.material_count = 0
-        self.material_user = ''
-        self.material_usage = ''
-
-    def _is_user_search(self):
-        return self.search_type == USER_SEARCH
-
-    def _is_material_search(self):
-        return self.search_type == MATERIAL_SEARCH
-
-    def paint_panel(self):
-        """
-        绘制控制面板UI
-        """
-        util.add_horizontal_space(self, 11, 0)
-        self.i_paint_main_head()
-        util.add_horizontal_separator(self, 11, 2)
-        self.paint_data_table()
-
-    def paint_data_table(self):
-        """
-        绘制控制面板中的数据表格
-        """
-        current_row = 8
-
-        # 绘制表头
-        for (col, name) in enumerate(self.page_table_titles):
-            ttk.Label(self, text=name, width=self.TABLE_ENTRY_WIDTH).grid(
-                row=current_row, column=col)
-
-        current_row += 1
-
-        # 绘制数据表格
-        for row in xrange(MAX_TABLE_ROW):
-            for col in xrange(self.max_table_col):
-                self.page_table_entries[row][col].grid(
-                    row=current_row, column=col)
-            current_row += 1
-
-        util.add_horizontal_separator(self, 11, current_row)
-        self._paint_table_pagination(current_row + 3)
-
-    def _paint_table_pagination(self, row):
-        """
-        绘制数据表格的导航按钮
-        """
-        util.makePreButton(self, row, 0)
-        ttk.Label(self, textvariable=self.page_table_info_msg).grid(
-            row=row, column=1)
-        self._set_page_table_info_msg()
-        util.makeNextButton(self, row, 2)
+    def _cancel_operate(self):
+        '''
+        let control panel's main header's operation data filed be the default value
+        :return:
+        '''
+        self.material_name_var.set('')
+        self.material_type_var.set('')
+        self.material_new_type_var.set('')
+        self.material_unit_var.set('')
+        self.material_count_var.set(0)
+        self.material_price_var.set(0.0)
+        self.material_note_var.set('')
+        self.material_user_var.set('')
+        self.material_usage_var.set('')
 
     def _post_operate(self):
         '''
         this method used to redraw data table after operate
         '''
         self.current_page = 1
+        self.page_obj_count = self.i_get_page_obj_count()
+        self.page_count = self._get_page_count()
         self._fresh_page_data()
+
+    def _search(self):
+        '''
+        this is a generalized search handler for search action
+        :return:
+        '''
+        if not self.search_key:
+            tkMessageBox.showwarning(_.search_warning_title, _.search_key_none_warning_msg)
+            return
+
+        self._post_search()
+
+    def _search_reset(self):
+        '''
+        Clean search field value and refresh data table
+        '''
+        self.search_key_var.set('')
+        if self._is_material_search():
+            self.search_material_type_var.set('')
+        self._post_operate()
+
+    def _post_search(self):
+        '''
+        this method will be called after search operation
+        :return:
+        '''
+        self.current_page = 1
+        self.page_obj_count = self.i_get_page_obj_count()
+        self.page_count = self._get_page_count()
+        self._fresh_page_data()
+
+    def _is_user_search(self):
+        return self.search_type == USER_SEARCH
+
+    def _is_material_search(self):
+        return self.search_type == MATERIAL_SEARCH
 
     def _pre_page(self):
         """
@@ -293,15 +355,29 @@ class ControlPanel(tk.Frame):
             for col in row:
                 col.set('')
 
-    def _add_main_head_label(self, text, row, column, width=10):
+    def i_fill_page_data_table(self):
         """
-        在控制面板头中绘制标签组件
+        using self.page_objs to fill self.page_table_entry_values,
+        self.page_objs depends on user selected operations: search/create
         """
-        return ttk.Label(self, text=text, width=width).grid(row=row, column=column)
+        raise NotImplemented('method not implemented yet!')
+
+    def _create_label(self, x, y, text, width=50, **config):
+        """
+        draw label text on control panel's header
+        """
+
+        self.main_canvas.create_text(x, y, text='%6s' % text, width=width, **config)
+
+    def _create_widget(self, x, y, widget, **config):
+        '''
+        draw tkinter widget on control panel's header
+        '''
+        self.main_canvas.create_window(x, y, window=widget, **config)
 
     def _set_page_table_info_msg(self):
         '''
-        设置页面导航的页面信息
+        setting data table's page navigation infomation
         '''
         self.page_table_info_msg.set(
             PAGE_INFO_SEPARATOR.join(map(str, [self.current_page, self.page_count])))
@@ -312,14 +388,7 @@ class ControlPanel(tk.Frame):
 
     def i_paint_main_head(self):
         """
-        Because each control panels header has different lay out
-        So this method should be implemented by each panel subclass
-        """
-        raise NotImplemented('method not implemented yet!')
-
-    def i_fill_page_data_table(self):
-        """
-        Because the data items are depend on the data model's field
+        draw the control panel's main header
         """
         raise NotImplemented('method not implemented yet!')
 
@@ -332,29 +401,48 @@ class ControlPanel(tk.Frame):
 
     def i_get_page_table_titles(self):
         '''
-        Each data table's header depends on the data model's fields
+        get current data table's header string list
         '''
         raise NotImplemented('method not implemented yet!')
 
     def i_get_page_obj_count(self):
         '''
-        Objects count are depend on the control panel and user's operate
+        get current control panel's related object's all count
         '''
         raise NotImplemented('method not implemented yet!')
 
+    def _repeat_record_check(self):
+        '''
+        check if current operate record is the same as before
+        :return: bool
+        '''
+        current_record_id = self._get_record_id()
+        if self.last_record_id is None:
+            self.last_record_id = current_record_id
+            return True
+        else:
+            if current_record_id == self.last_record_id:
+                if self.control_panel_type == IN_MATERIAL:
+                    answer = tkMessageBox.askyesno(_.in_material_confirm_title, _.in_material_confirm_msg)
+                    if not answer:
+                        return False
+                elif self.control_panel_type == OUT_MATERIAL:
+                    answer = tkMessageBox.askyesno(_.out_material_confirm_title, _.out_material_confirm_msg)
+                    if not answer:
+                        return False
+                return True
+            else:
+                self.last_record_id = current_record_id
+                return True
+
     def _get_record_id(self):
+        """
+        generate a identity string for current operating data
+        used to compare user's last 2 operation data
+        :rtype: str
+        """
         return "".join(
             (self.material_name, self.material_type, str(self.material_count), self.material_usage, self.material_user))
-
-
-    def _search_reset(self):
-        '''
-        Clean search field value and refresh data table
-        '''
-        self.search_key_var.set('')
-        if self._is_material_search():
-            self.search_material_type_var.set('')
-        self._fresh_page_data()
 
     def _update_user(self, username):
         '''
@@ -369,27 +457,25 @@ class ControlPanel(tk.Frame):
         return user
 
     def _update_material(self, material_name, material_type, material_count):
+        '''
+        this method mainly used to update material's count number depens on the control panel's type
+        :param material_name:
+        :param material_type:
+        :param material_count:
+        :return: Material
+        '''
         material = MATERIAL_UTIL.getObjectByNameAndType(material_name, material_type)
         if material is None:
             tkMessageBox.showwarning(_.update_material_warning_title, _.material_not_exists)
             return None
 
-        if material is not None:
-            if self.control_panel_type == IN_MATERIAL:
-                material.count += material_count
-            elif self.control_panel_type == OUT_MATERIAL:
-                if material.count < material_count:
-                    tkMessageBox.showwarning(_.update_material_warning_title, )
-
-
-
-    # 整数Entry值验证器
-    def _int_validator(self, action, index, text):
-        print(action, index, text)
-        if not text:
-            return True
-
-        if not text.isdigit():
-            tkMessageBox.showwarning(u"整数验证信息", u'%s 不是一个整数值' % text)
-            return False
-        return True
+        if self.control_panel_type == IN_MATERIAL:
+            material.count += material_count
+        elif self.control_panel_type == OUT_MATERIAL:
+            if material.count < material_count:
+                tkMessageBox.showwarning(_.update_material_warning_title, _.out_material_count_over_msg)
+                return
+            else:
+                material.count -= material_count
+        MATERIAL_UTIL.add(material)
+        return material

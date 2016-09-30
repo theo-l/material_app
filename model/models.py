@@ -61,9 +61,13 @@ class Material(Base):
     def get_ui_list(self):
         return [self.name, self.type_no, self.unit, self.count, self.price, self.creation, self.last_update, self.note]
 
+
     @staticmethod
-    def new_(name, type_no, count=0):
-        return Material(name=name, type_no=type_no, count=count)
+    def new_(name, type_no, count=0,unit=None,price=0.0, note=None):
+        return Material(name=name, type_no=type_no, count=count, unit=unit, price=price, note=note)
+
+    def __str__(self):
+        return "Name: %s, Type:%s, count:%d, unit:%s, Price: %f, Note:%s"%(self.name, self.type_no, self.count, self.unit, self.price, self.note)
 
 
 @event.listens_for(Material, 'before_update')

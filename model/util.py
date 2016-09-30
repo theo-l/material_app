@@ -127,10 +127,16 @@ class MaterialUtil(ModelUtil):
         return [i[0] for i in self.query(Material.type_no).filter_by(name=name).all()]
 
     def getAllObjects(self):
-        return self.query(Material).all()
+        return self.query(Material).order_by(Material.name.asc(), Material.type_no.asc()).order_by(Material.id.asc()).all()
 
     def getCount(self):
         return self.query(Material).count()
+
+    def getCountByName(self, name):
+        return self.query(Material).filter_by(name=name).count()
+
+    def getCountByNameAndType(self, name, type_no):
+        return self.query(Material).filter_by(name=name, type_no=type_no).count()
 
     def clean(self):
         for material in self.getAllObjects():
@@ -167,6 +173,10 @@ class OutMaterialUtil(ModelUtil):
     def getOutListCountByMaterial(self, material):
         return self.query(OutMaterial).filter_by(material_id=material.id).count()
 
+    def updateOutMaterial(self, user_id, material_id, material_count, material_usage):
+        obj= OutMaterial(user_id=user_id, material_id=material_id, count=material_count, usage=material_usage)
+        self.add(obj)
+
     def isObjectExists(self, obj):
         return ModelUtil.isObjectExists(self, obj)
 
@@ -196,6 +206,10 @@ class InMaterialUtil(ModelUtil):
 
     def getInListCountByMaterial(self, material):
         return self.query(InMaterial).filter_by(material_id=material.id).count()
+
+    def updateInMaterial(self, user_id, material_id, material_count):
+        obj = InMaterial(user_id=user_id, material_id = material_id, count=material_count)
+        self.add(obj)
 
     def getCount(self):
         "获取数据记录个数"
