@@ -117,7 +117,7 @@ class OutMaterialPanel(ControlPanel):
         if user is None:
             return
 
-        OUTMATERIAL_UTIL.updateOutMaterial(user.id, material.id, self.material_count, self.material_usage)
+        OUTMATERIAL_UTIL.update_out_material(user.id, material.id, self.material_count, self.material_usage)
 
         tkMessageBox.showinfo(
             _.out_material_info_title, _.out_material_succeed)
@@ -128,44 +128,44 @@ class OutMaterialPanel(ControlPanel):
 
     def i_get_page_obj_count(self):
         if not self.search_key:
-            return OUTMATERIAL_UTIL.getCount()
+            return OUTMATERIAL_UTIL.get_count()
 
         if self._is_user_search():
-            user = USER_UTIL.getObjectByName(self.search_key)
+            user = USER_UTIL.get_object_by_name(self.search_key)
             if not user:
                 tkMessageBox.showwarning(_.search_warning_title, _.user_not_exists)
                 return 0
-            return OUTMATERIAL_UTIL.getOutListCountByUser(user)
+            return OUTMATERIAL_UTIL.get_out_list_count_by_user(user)
         else:
             if not self.search_material_type:
                 return OUTMATERIAL_UTIL.get_out_count_by_material_name(self.search_key)
             else:
-                material = MATERIAL_UTIL.getObjectByNameAndType(self.search_keyk, self.search_material_type)
-                return OUTMATERIAL_UTIL.getOutListCountByMaterial(material)
+                material = MATERIAL_UTIL.get_object_by_name_and_type(self.search_keyk, self.search_material_type)
+                return OUTMATERIAL_UTIL.get_out_list_count_by_material(material)
 
     def i_get_current_page_objs(self):
         start = (self.current_page - 1) * MAX_TABLE_ROW
         end = start + MAX_TABLE_ROW
 
         if not self.search_key:
-            return OUTMATERIAL_UTIL.getAllObjects()[start:end]
+            return OUTMATERIAL_UTIL.get_all_objects()[start:end]
 
         if self._is_user_search():
-            user = USER_UTIL.getObjectByName(self.search_key)
-            return OUTMATERIAL_UTIL.getOutListByUser(user)[start:end]
+            user = USER_UTIL.get_object_by_name(self.search_key)
+            return OUTMATERIAL_UTIL.get_out_list_by_user(user)[start:end]
         else:
             if not self.search_material_type:
                 return OUTMATERIAL_UTIL.get_out_list_by_material_name(self.search_key)[start:end]
             else:
-                material = MATERIAL_UTIL.getObjectByNameAndType( self.search_key, self.search_material_type)
-                return OUTMATERIAL_UTIL.getOutListByMaterial(material)[start:end]
+                material = MATERIAL_UTIL.get_object_by_name_and_type( self.search_key, self.search_material_type)
+                return OUTMATERIAL_UTIL.get_out_list_by_material(material)[start:end]
 
     def i_fill_page_data_table(self):
         for (row, obj) in enumerate(self.page_objs):
             row_data = self.page_table_entry_values[row]
             obj_fields = obj.get_ui_list()
-            user = USER_UTIL.getObjectById(obj_fields[0])
-            material = MATERIAL_UTIL.getObjectById(obj_fields[1])
+            user = USER_UTIL.get_object_by_id(obj_fields[0])
+            material = MATERIAL_UTIL.get_object_by_id(obj_fields[1])
             obj_fields[0:3] = (user.name, material.name, material.type_no)
             for col in xrange(self.max_table_col):
                 row_data[col].set(obj_fields[col])

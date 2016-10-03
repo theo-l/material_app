@@ -17,54 +17,54 @@ class DepartmentTest(unittest.TestCase):
     def test_add_department(self):
 
         self.assertIsNotNone(
-            DEPARTMENT_UTIL.getObjectByName("Admin"), "object add failed")
+            DEPARTMENT_UTIL.get_object_by_name("Admin"), "object add failed")
 
         self.assertIsNotNone(
-            DEPARTMENT_UTIL.getObjectByName("HR"), "object add failed")
+            DEPARTMENT_UTIL.get_object_by_name("HR"), "object add failed")
 
         self.assertIsNotNone(
-            DEPARTMENT_UTIL.getObjectByName("Fina"), "object add failed")
+            DEPARTMENT_UTIL.get_object_by_name("Fina"), "object add failed")
 
         self.assertIsNotNone(
-            DEPARTMENT_UTIL.getObjectByName("IT"), "object add failed")
+            DEPARTMENT_UTIL.get_object_by_name("IT"), "object add failed")
 
         self.assertEqual(
-            DEPARTMENT_UTIL.getCount(), 4, "object delete failed")
+            DEPARTMENT_UTIL.get_count(), 4, "object delete failed")
 
     def test_query_department(self):
 
-        self.assertEqual(DEPARTMENT_UTIL.getObjectByName(
+        self.assertEqual(DEPARTMENT_UTIL.get_object_by_name(
             "Admin").name, "Admin", "object query failed")
 
-        self.assertEqual(DEPARTMENT_UTIL.getObjectByName(
+        self.assertEqual(DEPARTMENT_UTIL.get_object_by_name(
             "HR").name, "HR", "object query failed")
 
-        self.assertEqual(DEPARTMENT_UTIL.getObjectByName(
+        self.assertEqual(DEPARTMENT_UTIL.get_object_by_name(
             "Fina").name, "Fina", "object query failed")
 
-        self.assertEqual(DEPARTMENT_UTIL.getObjectByName(
+        self.assertEqual(DEPARTMENT_UTIL.get_object_by_name(
             "IT").name, "IT", "object query failed")
 
     def test_delete_department(self):
 
-        DEPARTMENT_UTIL.deleteByName("Admin")
+        DEPARTMENT_UTIL.delete_by_name("Admin")
         self.assertIsNone(
-            DEPARTMENT_UTIL.getObjectByName("Admin"), "object delete failed")
+            DEPARTMENT_UTIL.get_object_by_name("Admin"), "object delete failed")
 
-        DEPARTMENT_UTIL.deleteByName("HR")
+        DEPARTMENT_UTIL.delete_by_name("HR")
         self.assertIsNone(
-            DEPARTMENT_UTIL.getObjectByName("HR"), "object delete failed")
+            DEPARTMENT_UTIL.get_object_by_name("HR"), "object delete failed")
 
-        DEPARTMENT_UTIL.deleteByName("Fina")
+        DEPARTMENT_UTIL.delete_by_name("Fina")
         self.assertIsNone(
-            DEPARTMENT_UTIL.getObjectByName("Fina"), "object delete failed")
+            DEPARTMENT_UTIL.get_object_by_name("Fina"), "object delete failed")
 
-        DEPARTMENT_UTIL.deleteByName("IT")
+        DEPARTMENT_UTIL.delete_by_name("IT")
         self.assertIsNone(
-            DEPARTMENT_UTIL.getObjectByName("IT"), "object delete failed")
+            DEPARTMENT_UTIL.get_object_by_name("IT"), "object delete failed")
 
         self.assertEqual(
-            DEPARTMENT_UTIL.getCount(), 0, "object delete failed")
+            DEPARTMENT_UTIL.get_count(), 0, "object delete failed")
 
 
 class UserTest(unittest.TestCase):
@@ -77,65 +77,65 @@ class UserTest(unittest.TestCase):
 
     def test_add_user(self):
         self.assertIsNotNone(
-            USER_UTIL.getObjectByName("admin"), "user add failed")
+            USER_UTIL.get_object_by_name("admin"), "user add failed")
         self.assertIsNotNone(
-            USER_UTIL.getObjectByName("normal"), "user add failed")
+            USER_UTIL.get_object_by_name("normal"), "user add failed")
         self.assertIsNotNone(
-            USER_UTIL.getObjectByName("simple"), "user add failed")
-        self.assertEqual(USER_UTIL.getCount(), 3, "user add failed")
+            USER_UTIL.get_object_by_name("simple"), "user add failed")
+        self.assertEqual(USER_UTIL.get_count(), 3, "user add failed")
 
     def test_delete_user(self):
-        USER_UTIL.deleteByName("admin")
+        USER_UTIL.delete_by_name("admin")
         self.assertIsNone(
-            USER_UTIL.getObjectByName("admin"), "user delete failed")
+            USER_UTIL.get_object_by_name("admin"), "user delete failed")
 
-        USER_UTIL.deleteByName("normal")
+        USER_UTIL.delete_by_name("normal")
         self.assertIsNone(
-            USER_UTIL.getObjectByName("normal"), "user delete failed")
+            USER_UTIL.get_object_by_name("normal"), "user delete failed")
 
-        USER_UTIL.deleteByName("simple")
+        USER_UTIL.delete_by_name("simple")
         self.assertIsNone(
-            USER_UTIL.getObjectByName("simple"), "user delete failed")
+            USER_UTIL.get_object_by_name("simple"), "user delete failed")
 
-        self.assertEqual(USER_UTIL.getCount(), 0, "user delete failed")
+        self.assertEqual(USER_UTIL.get_count(), 0, "user delete failed")
 
     def test_query_user(self):
         self.assertEqual(
-            USER_UTIL.getObjectByName("admin").name, "admin", "user query failed")
+            USER_UTIL.get_object_by_name("admin").name, "admin", "user query failed")
 
         self.assertEqual(
-            USER_UTIL.getObjectByName("normal").name, "normal", "user query failed")
+            USER_UTIL.get_object_by_name("normal").name, "normal", "user query failed")
 
         self.assertEqual(
-            USER_UTIL.getObjectByName("simple").name, "simple", "user query failed")
+            USER_UTIL.get_object_by_name("simple").name, "simple", "user query failed")
 
     def test_user_position(self):
-        self.assertTrue(USER_UTIL.getObjectByName(
+        self.assertTrue(USER_UTIL.get_object_by_name(
             "admin").is_admin_user(), "user position failed")
 
-        self.assertTrue(USER_UTIL.getObjectByName(
+        self.assertTrue(USER_UTIL.get_object_by_name(
             "normal").is_admin_user(), "user position failed")
 
-        self.assertTrue(not USER_UTIL.getObjectByName(
+        self.assertTrue(not USER_UTIL.get_object_by_name(
             "simple").is_admin_user(), "user position failed")
 
     def test_login_user(self):
         self.assertIsNotNone(
-            USER_UTIL.getObjectByNameAndPassword("admin", "admin"), "login failed")
+            USER_UTIL.get_object_by_name_and_password("admin", "admin"), "login failed")
 
         self.assertIsNotNone(
-            USER_UTIL.getObjectByNameAndPassword("normal", "normal"), "login failed")
+            USER_UTIL.get_object_by_name_and_password("normal", "normal"), "login failed")
 
         self.assertIsNone(
-            USER_UTIL.getObjectByNameAndPassword("simple", ""), "login failed")
+            USER_UTIL.get_object_by_name_and_password("simple", ""), "login failed")
 
     def test_update_user(self):
-        admin = USER_UTIL.getObjectByName("admin")
+        admin = USER_UTIL.get_object_by_name("admin")
         self.assertEqual(admin.password, "admin", "user query failed")
         admin.password = "updated"
         USER_UTIL.add(admin)
 
-        self.assertEqual(USER_UTIL.getObjectByName(
+        self.assertEqual(USER_UTIL.get_object_by_name(
             "admin").password, "updated", "user update failed")
 
 
@@ -149,22 +149,22 @@ class MateriaTest(unittest.TestCase):
 
     def test_add_material(self):
         self.assertIsNotNone(
-            MATERIAL_UTIL.getObjectByNameAndType(u"光缆", u"6芯"), "material add failed")
+            MATERIAL_UTIL.get_object_by_name_and_type(u"光缆", u"6芯"), "material add failed")
 
         self.assertIsNotNone(
-            MATERIAL_UTIL.getObjectByNameAndType(u"光缆", u"7芯"), "material add failed")
+            MATERIAL_UTIL.get_object_by_name_and_type(u"光缆", u"7芯"), "material add failed")
 
         self.assertIsNotNone(
-            MATERIAL_UTIL.getObjectByNameAndType(u"光缆", u"8芯"), "material add failed")
+            MATERIAL_UTIL.get_object_by_name_and_type(u"光缆", u"8芯"), "material add failed")
 
-        self.assertEqual(MATERIAL_UTIL.getCount(), 3, "material add failed")
+        self.assertEqual(MATERIAL_UTIL.get_count(), 3, "material add failed")
 
     def test_query_type_no(self):
         self.assertEqual(
-            MATERIAL_UTIL.getTypeNoByName(u'光缆'), [u'6芯', u'7芯', u'8芯'],  "type no query failed")
+            MATERIAL_UTIL.get_type_no_by_name(u'光缆'), [u'6芯', u'7芯', u'8芯'],  "type no query failed")
 
     def test_query_material(self):
-        self.assertEqual(MATERIAL_UTIL.getObjectByNameAndType(
+        self.assertEqual(MATERIAL_UTIL.get_object_by_name_and_type(
             "光缆".decode('utf-8'), "6芯".decode("utf-8")).count, 100, "material query failed")
 
 

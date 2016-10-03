@@ -146,23 +146,23 @@ class MaterialPanel(ControlPanel):
 
     def i_get_page_obj_count(self):
         if not self.search_key:
-            return MATERIAL_UTIL.getCount()
+            return MATERIAL_UTIL.get_count()
 
         if not self.search_material_type:
-            return MATERIAL_UTIL.getCountByName(self.search_key)
+            return MATERIAL_UTIL.get_count_by_name(self.search_key)
 
-        return MATERIAL_UTIL.getCountByNameAndType(self.search_key, self.search_material_type)
+        return MATERIAL_UTIL.get_count_by_name_and_type(self.search_key, self.search_material_type)
 
     def i_get_current_page_objs(self):
         start = (self.current_page - 1) * MAX_TABLE_ROW
         end = start + MAX_TABLE_ROW
         if not self.search_key:
-            return MATERIAL_UTIL.getAllObjects()[start:end]
+            return MATERIAL_UTIL.get_all_objects()[start:end]
 
         if not self.search_material_type:
-            return MATERIAL_UTIL.getObjectByName(self.search_key)
+            return MATERIAL_UTIL.get_object_by_name(self.search_key)
 
-        return [MATERIAL_UTIL.getObjectByNameAndType(self.search_key, self.search_material_type)]
+        return [MATERIAL_UTIL.get_object_by_name_and_type(self.search_key, self.search_material_type)]
 
     def i_fill_page_data_table(self):
         for (row, obj) in enumerate(self.page_objs):

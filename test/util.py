@@ -25,7 +25,7 @@ def init_departments():
     dep3 = Department(name="Fina")
     dep4 = Department(name="IT")
 
-    DEPARTMENT_UTIL.addAll([dep1, dep2, dep3, dep4])
+    DEPARTMENT_UTIL.add_all([dep1, dep2, dep3, dep4])
 
 
 def clean_departments():
@@ -39,7 +39,7 @@ def init_users():
     normal = User(name="normal", password="normal")
     simple = User(name="simple")
 
-    USER_UTIL.addAll([admin, normal, simple])
+    USER_UTIL.add_all([admin, normal, simple])
 
 
 def clean_users():
@@ -63,7 +63,7 @@ def init_materials():
     mat3 = Material(
         name=u"光缆", count=100, unit=u"匝", type_no=u"8芯", price=286.95)
 
-    MATERIAL_UTIL.addAll([mat1, mat2, mat3])
+    MATERIAL_UTIL.add_all([mat1, mat2, mat3])
 
 
 def clean_materials():

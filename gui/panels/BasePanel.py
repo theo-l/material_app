@@ -176,7 +176,7 @@ class ControlPanel(tk.Frame):
         if not self.material_name:
             return
 
-        material_type_options = MATERIAL_UTIL.getTypeNoByName(self.material_name)
+        material_type_options = MATERIAL_UTIL.get_type_no_by_name(self.material_name)
         self.material_type_var.set(material_type_options[0])
         self.material_type_widget.config(values=material_type_options)
 
@@ -207,7 +207,7 @@ class ControlPanel(tk.Frame):
             print 'is user search'
             return
 
-        material_type_options = MATERIAL_UTIL.getTypeNoByName(self.search_key)
+        material_type_options = MATERIAL_UTIL.get_type_no_by_name(self.search_key)
         self.search_material_type_var.set(material_type_options[0])
         self.search_material_type_widget.config(values=material_type_options)
 
@@ -450,7 +450,7 @@ class ControlPanel(tk.Frame):
         :param username:
         :return: user
         '''
-        user = USER_UTIL.getObjectByName(username)
+        user = USER_UTIL.get_object_by_name(username)
         if not user:
             user = User.new_(username)
             USER_UTIL.add(user)
@@ -464,7 +464,7 @@ class ControlPanel(tk.Frame):
         :param material_count:
         :return: Material
         '''
-        material = MATERIAL_UTIL.getObjectByNameAndType(material_name, material_type)
+        material = MATERIAL_UTIL.get_object_by_name_and_type(material_name, material_type)
         if material is None:
             tkMessageBox.showwarning(_.update_material_warning_title, _.material_not_exists)
             return None

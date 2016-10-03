@@ -103,7 +103,7 @@ class Application(tk.Tk):
     def login(self):
         "登录相关操作实现"
 
-        self.USER = USER_UTIL.getObjectByNameAndPassword(
+        self.USER = USER_UTIL.get_object_by_name_and_password(
             self.username.get(), self.password.get())
 
         self.LOGGED_IN = self.USER is not None
