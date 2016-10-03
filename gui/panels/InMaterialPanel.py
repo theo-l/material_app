@@ -132,11 +132,10 @@ class InMaterialPanel(ControlPanel):
             else:
                 return INMATERIAL_UTIL.getInListCountByUser(user)
         else:
-            material = MATERIAL_UTIL.getObjectByNameAndType(self.search_key, self.search_material_type)
-            if not material:
-                tkMessageBox.showwarning(_.search_warning_title, _.material_not_exists)
-                return 0
+            if not self.search_material_type:
+                return INMATERIAL_UTIL.get_in_count_by_material_name(self.search_key)
             else:
+                material = MATERIAL_UTIL.getObjectByNameAndType(self.search_key, self.search_material_type)
                 return INMATERIAL_UTIL.getInListCountByMaterial(material)
 
     def i_get_current_page_objs(self):
@@ -149,10 +148,11 @@ class InMaterialPanel(ControlPanel):
             user = USER_UTIL.getObjectByName(self.search_key)
             return INMATERIAL_UTIL.getInListByUser(user)[start:end]
         else:
-
-            material = MATERIAL_UTIL.getObjectByNameAndType(
-                self.search_key, self.search_material_type)
-            return INMATERIAL_UTIL.getInListByMaterial(material)[start:end]
+            if not self.search_material_type:
+                return INMATERIAL_UTIL.get_in_list_by_material_name(self.search_key)[start:end]
+            else:
+                material = MATERIAL_UTIL.getObjectByNameAndType( self.search_key, self.search_material_type)
+                return INMATERIAL_UTIL.getInListByMaterial(material)[start:end]
 
     def i_fill_page_data_table(self):
 

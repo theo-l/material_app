@@ -137,11 +137,11 @@ class OutMaterialPanel(ControlPanel):
                 return 0
             return OUTMATERIAL_UTIL.getOutListCountByUser(user)
         else:
-            material = MATERIAL_UTIL.getObjectByNameAndType(self.search_keyk, self.search_material_type)
-            if not material:
-                tkMessageBox.showwarning(_.search_warning_title, _.material_not_exists)
-                return 0
-            return OUTMATERIAL_UTIL.getOutListCountByMaterial(material)
+            if not self.search_material_type:
+                return OUTMATERIAL_UTIL.get_out_count_by_material_name(self.search_key)
+            else:
+                material = MATERIAL_UTIL.getObjectByNameAndType(self.search_keyk, self.search_material_type)
+                return OUTMATERIAL_UTIL.getOutListCountByMaterial(material)
 
     def i_get_current_page_objs(self):
         start = (self.current_page - 1) * MAX_TABLE_ROW
@@ -154,9 +154,11 @@ class OutMaterialPanel(ControlPanel):
             user = USER_UTIL.getObjectByName(self.search_key)
             return OUTMATERIAL_UTIL.getOutListByUser(user)[start:end]
         else:
-            material = MATERIAL_UTIL.getObjectByNameAndType(
-                self.search_key, self.search_material_type)
-            return OUTMATERIAL_UTIL.getOutListByMaterial(material)
+            if not self.search_material_type:
+                return OUTMATERIAL_UTIL.get_out_list_by_material_name(self.search_key)[start:end]
+            else:
+                material = MATERIAL_UTIL.getObjectByNameAndType( self.search_key, self.search_material_type)
+                return OUTMATERIAL_UTIL.getOutListByMaterial(material)[start:end]
 
     def i_fill_page_data_table(self):
         for (row, obj) in enumerate(self.page_objs):

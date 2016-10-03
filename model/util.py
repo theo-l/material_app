@@ -144,6 +144,10 @@ class MaterialUtil(ModelUtil):
 
     def getObjectByName(self, name):
         return self.query(Material).filter_by(name=name).all()
+    
+    def get_list_by_name(self, material_name):
+        'return a list of material which have the same name'
+        return self.query(Material).filter_by(name=name).all()
 
     def getObjectByNameAndType(self, name, typeNo):
         return self.query(Material).filter_by(name=name, type_no=typeNo).first()
@@ -172,6 +176,14 @@ class OutMaterialUtil(ModelUtil):
 
     def getOutListCountByMaterial(self, material):
         return self.query(OutMaterial).filter_by(material_id=material.id).count()
+    
+    def get_out_count_by_material_name(self, material_name):
+        #TODO
+        return 0
+
+    def get_out_list_by_material_name(self, material_name):
+        #TODO
+        return []
 
     def updateOutMaterial(self, user_id, material_id, material_count, material_usage):
         obj= OutMaterial(user_id=user_id, material_id=material_id, count=material_count, usage=material_usage)
@@ -206,6 +218,17 @@ class InMaterialUtil(ModelUtil):
 
     def getInListCountByMaterial(self, material):
         return self.query(InMaterial).filter_by(material_id=material.id).count()
+    
+    def get_in_count_by_material_name(self, material_name):
+        'query in material count only by material name'
+        #TODO
+        return 0 
+
+    def get_in_list_by_material_name(self, material_name):
+        'query in material object list only by material name'
+        #TODO
+        return []
+        
 
     def updateInMaterial(self, user_id, material_id, material_count):
         obj = InMaterial(user_id=user_id, material_id = material_id, count=material_count)
