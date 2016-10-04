@@ -21,6 +21,7 @@ cancel = u'取消'
 login = u'登录'
 logout = u'注销'
 create=u'创建'
+export=u'导出'
 
 
 # 标签文本

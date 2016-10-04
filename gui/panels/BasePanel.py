@@ -79,6 +79,7 @@ class ControlPanel(tk.Frame):
 
         self.search_button = ttk.Button(self.main_canvas, text=_.search, command=self._search)
         self.reset_button = ttk.Button(self.main_canvas, text=_.reset, command=self._search_reset)
+        self.export_button = ttk.Button(self.main_canvas, text=_.export, command=self._export)
 
         # material type search widget's label and combobox position
         self.search_material_type_labelX = None
@@ -313,6 +314,11 @@ class ControlPanel(tk.Frame):
         self.page_obj_count = self.i_get_page_obj_count()
         self.page_count = self._get_page_count()
         self._fresh_page_data()
+    
+    def _export(self):
+        '''Export current page objects of normal or search results'''
+        #TODO
+	raise NotImplementedError('export method should be implemented by subclass')								
 
     def _is_user_search(self):
         return self.search_type == USER_SEARCH
