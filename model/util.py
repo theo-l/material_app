@@ -73,6 +73,7 @@ class DepartmentUtil(ModelUtil):
 
     def clean(self):
         "清理所有的单位对象"
+        
         departments = self.get_all_objects()
         for dep in departments:
             self.delete(dep)

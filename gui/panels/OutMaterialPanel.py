@@ -169,3 +169,22 @@ class OutMaterialPanel(ControlPanel):
             obj_fields[0:3] = (user.name, material.name, material.type_no)
             for col in xrange(self.max_table_col):
                 row_data[col].set(obj_fields[col])
+    
+    def i_export(self):
+        import csv
+        objects =[]
+        if not self.search_key:
+            objects = OUTMATERIAL_UTIL.get_all_objects()
+        elif self._is_user_search():
+            user = USER_UTIL.get_object_by_name(self.search_key)
+            if not user:
+                return
+            objects = OUTMATERIAL_UTIL.get_out_list_by_user(user)
+        else:
+            if not self.search_material_type:
+                objects = OUTMATERIAL_UTIL.get_out_list_by_material_name(self.search_key)
+            else:
+                material = MATERIAL_UTIL.get_object_by_name_and_type(self.search_key, self.search_material_type)
+                if not material:
+                    return
+                objects =  OUTMATERIAL_UTIL.get_out_list_by_material(material)

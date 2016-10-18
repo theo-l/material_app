@@ -4,6 +4,7 @@
 '''
 import ttk
 import tkMessageBox
+import tkFileDialog
 from gui.panels.BasePanel import ControlPanel
 from gui import messages as _
 from gui.constants import MAX_TABLE_ROW, IN_MATERIAL
@@ -94,6 +95,7 @@ class InMaterialPanel(ControlPanel):
             50, self.header_widget_current_y, self.search_button)
         self._create_widget(
             150, self.header_widget_current_y, self.reset_button)
+#        self._create_widget(250,self.header_widget_current_y,self.export_button)
 
         # 绘制垂直分割线
         self.main_canvas.create_line(300, 20, 300, 600)
@@ -185,3 +187,38 @@ class InMaterialPanel(ControlPanel):
             obj_fields[0:3] = (user.name, material.name, material.type_no)
             for col in xrange(self.max_table_col):
                 row_data[col].set(obj_fields[col])
+    
+    def i_export(self):
+        import csv
+        objects =[]
+        if not self.search_key:
+            objects = INMATERIAL_UTIL.get_all_objects()
+        elif self._is_user_search():
+            user = USER_UTIL.get_object_by_name(self.search_key)
+            objects = INMATERIAL_UTIL.get_in_list_by_user(user)
+        else:
+            if not self.search_material_type:
+                objects = INMATERIAL_UTIL.get_in_list_by_material_name(self.search_key)
+            else:
+                material = MATERIAL_UTIL.get_object_by_name_and_type(self.search_key, self.search_material_type)
+                objects = INMATERIAL_UTIL.get_in_list_by_material(material)
+        temp_file = tkFileDialog.asksaveasfile(mode='w', defaultextension='.csv' )
+        if temp_file is None:
+            return
+        writer = csv.writer(temp_file, delimiter=',')
+        writer.writerow([item.encode('utf-8') for item in _.in_material_table_titles])
+        for obj in objects:
+            obj_fields = obj.get_ui_list()
+            user = USER_UTIL.get_object_by_id(obj_fields[0])
+            material = MATERIAL_UTIL.get_object_by_id(obj_fields[1])
+            obj_fields[0:3]=[user.name, material.name, material.type_no]
+            writer.writerow([ item.encode('utf-8') for item in obj_fields])
+
+        temp_file.close()
+        
+            
+            
+
+
+        
+

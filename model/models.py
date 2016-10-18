@@ -91,7 +91,7 @@ class OutMaterial(Base):
 
     def get_ui_list(self):
         "出库人，材料名，型号， 数量，用途，出库时间"
-        return [self.user_id, self.material_id, None, self.count, self.usage, self.out_time]
+        return [self.user_id, self.material_id, None, str(self.count), self.usage, self.out_time]
 
 
 class InMaterial(Base):
@@ -106,4 +106,4 @@ class InMaterial(Base):
 
     def get_ui_list(self):
         "用户名，材料名，型号，数量，入库时间"
-        return [self.user_id, self.material_id, None, self.count, self.in_time]
+        return [self.user_id, self.material_id, None, str(self.count), str(self.in_time)]
