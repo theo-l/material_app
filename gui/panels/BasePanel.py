@@ -168,7 +168,7 @@ class ControlPanel(tk.Frame):
             row=row, column=1)
         self._set_page_table_info_msg()
         util.make_next_button(self.data_table_frame, row, 2, self._next_page)
-        self.export_button.config(row=row, column=3, command=self.i_export)
+#        self.export_button.config(row=row, column=3, command=self.i_export)
 
     def _material_name_handler(self, event):
         '''
